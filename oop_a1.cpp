@@ -1,67 +1,80 @@
-#include<iostream>
+#include <iostream>
 using namespace std;
 
-class complex{
-    public:
-    int real, img;
-    complex();
-    complex operator + (complex);
-    complex operator * (complex);
-    friend ostream operator << (ostream&, complex&);
-    friend istream operator >> (istream&, complex&);
+class Complex{
+	private:
+		int real,imag;
+	public:
+		Complex(){
+			real= 0;
+			imag = 0;
+		}
+		
+		friend istream & operator >> (istream &, Complex &); // Input 
+		friend ostream & operator << (ostream &, Complex &); // Output
+		
+		Complex operator *(Complex obj){
+			Complex op;
+			if(imag>0 and obj.imag>0){
+				op.real = (real*obj.real)-(imag*obj.imag);
+				op.imag = (real*obj.imag)+(obj.real*imag);
+			}
+			else if(imag>0 and obj.imag<0){
+				op.real = (real*obj.real)+(-(imag*obj.imag));
+				op.imag = (real*obj.imag)+(obj.real*imag);
+			}
+			else if(imag<0 and obj.imag>0){
+				op.real = (real*obj.real)+(-(imag*obj.imag));
+				op.imag = (real*obj.imag)+(obj.real*imag);
+			}
+			else{
+				op.real = real*obj.real-(imag*obj.imag);
+				op.imag = (real*obj.imag)+(obj.real*imag);
+			}
+			return op;
+		}
+		
+		Complex operator +(Complex obj){
+			Complex temp;
+			temp.real = real + obj.real;
+			temp.imag = imag + obj.imag;
+			return temp;
+		}
 };
 
-complex::complex(){
-    real = 0;
-    img = 0;
+istream &operator >>(istream &is, Complex &obj){
+	is>>obj.real;
+	is>>obj.imag;
+	return is;
 }
 
-complex complex :: operator + (complex obj){
-    complex temp;
-    temp.real = real + obj.real;
-    temp.img = img +obj.img;
-    return temp;
-}
-
-complex complex :: operator * (complex obj){
-    complex temp;
-    temp.real = (real*obj.real - img*obj.img);
-    temp.img = (real*obj.img + img*obj.real);
-    return temp;
-}
-
-ostream &operator << (ostream &out, complex &obj){
-    out<<" "<<obj.real;
-    out<<" + "<<obj.img<<"i";
-    return out;
-}
-
-istream &operator >> (istream &in, complex &obj){
-    in>>obj.real;
-    in>>obj.img;
-    return in;
+ostream &operator <<(ostream &out, Complex &obj){
+	if(obj.imag>0){
+		out<<obj.real<<" +"<<obj.imag<<"i"<<endl;
+	}
+	else{
+		out<<obj.real<<" "<<obj.imag<<"i"<<endl;
+	}
+	return out;
 }
 
 int main(){
-    complex a, b, c, d;
-    istream in;
-    ostream out;
-    
-    cout<<"The first complex number is:"<<endl;
-    cout<<"Enter real and img of the complex number, ";
-    in>>a;
-
-    cout<<"The second complex number is:"<<endl;
-    cout<<"Enter real and img of the complex number, ";
-    in>>b;
-
-    c = a + b;
-    cout<<"The addition is: ";
-	out<<c<<endl;
-
-    d = a*b;
-    cout<<"The multiplication is: ";
-	out<<d<<endl;
-    
-    return 0;
+	
+	Complex a, b;
+	
+	cout<<"Enter coefficents of real and imaginary part of first number: "<<endl;
+	cin>>a;
+	cout<<"Enter coefficents of real and imaginary part of second number: "<<endl;
+	cin>>b;
+	
+	cout<<"Multiplication of given complex numbers is, ";
+	Complex c = a*b;
+	cout<<c;
+	
+	cout<<"Addition of given complex number is, ";
+	Complex d = a+b;
+	cout<<d;
+	
+	return 0;
 }
+
